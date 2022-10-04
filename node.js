@@ -142,29 +142,24 @@ async function deleteById(id) {
     fs.readFile('./characters.json', async (err, data) => {
         if (err) throw err
         let people = JSON.parse(data)
+        await writeDeleteNames(id, people)
         people.splice(id, 1)
         await writeJsonFile(people)
         console.log("Object deleted!\n", people)
-        await writeDeleteNames(id)
     })
 }
 
-async function writeDeleteNames(id) {
+async function writeDeleteNames(id, peopleArr) {
     /**
      * Function to write deleted names in txt file
      * @param id
      */
-    fs.readFile('./characters.json', async (err, data) => {
-        if (err) throw err
-        let people = JSON.parse(data)
-
-        for (let obj in people) {
-            if (obj === id) {
-                let names = people[obj].name
-                await writeTXT(names)
-            }
+    for (let obj in peopleArr) {
+        if (obj === id) {
+            let names = peopleArr[obj].name
+            await writeTXT(names)
         }
-    })
+    }
 }
 
 async function writeTXT(name) {
